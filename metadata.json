@@ -1,0 +1,6 @@
+{
+  "name": "Món quà 20/10 của em",
+  "description": "Bó hoa ảnh và thiệp quà 3D lãng mạn tương tác với mưa ảnh, lời chúc và phong thư hoa.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

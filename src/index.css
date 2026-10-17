@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@import "./bouquet.css";
+
+/* Ensure full viewport and romantic velvet rose backdrop */
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 35%, #380d2b 0%, #22071b 60%, #10020d 100%);
+  color: #fff;
+  font-family: 'Mali', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Custom 3D canvas overlay positioning */
+.scene-canvas-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Sparkle particles on top of bouquet */
+@keyframes sparkleFloat {
+  0% { transform: translateY(0px) scale(0.8); opacity: 0; }
+  50% { opacity: 0.9; }
+  100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+}
+
+.sparkle-item {
+  animation: sparkleFloat 2.4s ease-in-out infinite;
+}
