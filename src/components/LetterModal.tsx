@@ -16,20 +16,6 @@ export const LetterModal: React.FC<LetterModalProps> = ({ open, onClose, letter 
   const parsed = formatLetterText(letter.text);
   const envelope = letter.envelope;
 
-  const [scale, setScale] = useState(0.85);
-
-  useEffect(() => {
-    const updateScale = () => {
-      const h = window.innerHeight;
-      const w = window.innerWidth;
-      const s = Math.min(1, Math.min((h - 80) / 920, (w - 32) / 720));
-      setScale(Math.max(0.45, Math.min(1, s)));
-    };
-    updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, []);
-
   useEffect(() => {
     if (open) {
       setIsClosing(false);
@@ -90,12 +76,6 @@ export const LetterModal: React.FC<LetterModalProps> = ({ open, onClose, letter 
 
       <main
         className="fl-main is-fitted"
-        style={{
-          ['--letter-scale' as any]: scale,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
       >
         <div className="fl-artwork" style={{ visibility: 'visible' }}>
           <section
@@ -167,10 +147,10 @@ export const LetterModal: React.FC<LetterModalProps> = ({ open, onClose, letter 
                 style={{
                   transform:
                     envelopeState === 'open'
-                      ? 'translateY(-80px)'
+                      ? 'translateY(-24%) rotate(-0.8deg)'
                       : envelopeState === 'opening'
-                      ? 'translateY(-20px)'
-                      : 'translateY(120px)',
+                      ? 'translateY(-6%) rotate(-0.8deg)'
+                      : 'translateY(18%) rotate(-0.8deg)',
                   opacity: envelopeState === 'closed' ? 0 : 1,
                   transition: 'transform 0.85s cubic-bezier(0.22, 0.75, 0.25, 1), opacity 0.5s ease',
                   zIndex: envelopeState === 'open' ? 35 : 15
