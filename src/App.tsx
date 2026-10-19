@@ -3,7 +3,6 @@ import { BouquetIntro } from './components/BouquetIntro';
 import { ThreeCanvasScene } from './components/ThreeCanvasScene';
 import { LetterModal } from './components/LetterModal';
 import { TopBar } from './components/TopBar';
-import { PWAInstallButton } from './components/PWAInstallButton';
 import {
   DEFAULT_GIFT_CONFIG,
   parseGiftConfig,
@@ -134,9 +133,6 @@ export default function App() {
         onClose={() => setLetterOpen(false)}
         letter={config.letter}
       />
-
-      {/* 4. Mobile PWA Installation & Sharing Button */}
-      <PWAInstallButton />
     </main>
   );
 }

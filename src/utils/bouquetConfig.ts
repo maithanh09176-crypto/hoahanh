@@ -130,7 +130,7 @@ export const DEFAULT_GIFT_CONFIG: GiftConfig = {
     "/photos/anh19.jpg"
   ],
   letter: {
-    text: "Gửi cô gái bé nhỏ <3\n\nAnh chúc em ngày 20/10 và những ngày khác lúc nào cũng xinh đẹp, nhiều may mắn và bình an, được yêu thương như cách mình mong muốn.\n\nGặp được em là điều rất may mắn với anh, nên anh chỉ mong những ngày tới em sẽ luôn vui vẻ như vậy.\n\nHi vọng sẽ thấy em cười thật nhiều hơn",
+    text: "Gửi cô gái bé nhỏ <3\n\n20/10 anh không biết nói gì nhiều. Chúc em luôn rực rỡ như hoa, may mắn và bình an, được yêu thương như cách mình mong muốn.\n\nGặp được em đã là niềm vui lớn của anh rồi, nên anh chỉ mong những ngày tới em sẽ luôn hạnh phúc.\n\nHi vọng sẽ thấy em cười thật nhiềuu",
     photo: "/photos/anh1.jpg",
     envelope: {
       topLine: "Dành tặng em",
