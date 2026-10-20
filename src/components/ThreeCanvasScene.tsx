@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 interface ThreeCanvasSceneProps {
   texts: string[];
@@ -352,48 +353,27 @@ export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
       }
     }
 
-    // --- Interactive Orbit Drag / Touch & Zoom ---
-    let isDragging = false;
-    let prevMouseX = 0;
-    let prevMouseY = 0;
-    let rotationVelocityX = 0.0008;
-    let rotationVelocityY = 0;
-    let targetZoom = camera.position.z;
+    // --- 5. Interactive OrbitControls (360-degree rotation & smooth zoom) ---
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.rotateSpeed = 0.85;
+    controls.enableZoom = true;
+    controls.zoomSpeed = 1.2;
+    controls.minDistance = 6;
+    controls.maxDistance = 85;
 
-    const handlePointerDown = (e: PointerEvent) => {
-      isDragging = true;
-      prevMouseX = e.clientX;
-      prevMouseY = e.clientY;
-    };
+    // Full 360-degree horizontal rotation with no angle bounds
+    controls.minAzimuthAngle = -Infinity;
+    controls.maxAzimuthAngle = Infinity;
 
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!isDragging) return;
-      const deltaX = e.clientX - prevMouseX;
-      const deltaY = e.clientY - prevMouseY;
-      prevMouseX = e.clientX;
-      prevMouseY = e.clientY;
+    // Wide vertical angle for complete freedom of view
+    controls.minPolarAngle = 0.04;
+    controls.maxPolarAngle = Math.PI - 0.04;
 
-      rotationVelocityX = deltaX * 0.003;
-      rotationVelocityY = deltaY * 0.003;
-
-      // Orbit camera around center
-      scene.rotation.y += rotationVelocityX;
-      scene.rotation.x = Math.max(-0.6, Math.min(0.6, scene.rotation.x + rotationVelocityY));
-    };
-
-    const handlePointerUp = () => {
-      isDragging = false;
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      targetZoom = Math.max(12, Math.min(60, targetZoom + e.deltaY * 0.03));
-    };
-
-    container.addEventListener('pointerdown', handlePointerDown);
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
-    container.addEventListener('wheel', handleWheel, { passive: false });
+    // Gentle auto-rotation that pauses automatically during user interaction
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.45;
 
     // Handle Resize
     const handleResize = () => {
@@ -414,23 +394,17 @@ export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
       animId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Smooth zoom damping
-      camera.position.z += (targetZoom - camera.position.z) * 0.08;
-
-      // Gentle auto-rotation drift
-      if (!isDragging) {
-        scene.rotation.y += 0.0006;
-      }
+      // Update smooth physics & 360 rotation of OrbitControls
+      controls.update();
 
       // Animate pink starfield twinkling
-      starPoints.rotation.y = elapsedTime * 0.01;
-      starPoints.rotation.x = elapsedTime * 0.005;
+      starPoints.rotation.y = elapsedTime * 0.008;
 
-      // Animate 3D particle text words (floating & billboarding so dots face camera)
+      // Animate 3D particle text words (floating & billboarding so dots face camera from any 360° angle)
       textGroups.forEach((item) => {
         item.group.position.y =
           item.initialY + Math.sin(elapsedTime * item.wobbleSpeed + item.phase) * 1.5;
-        // Make the particle text face camera for perfect readability
+        // Make the particle text face camera for perfect readability at all angles
         item.group.quaternion.copy(camera.quaternion);
 
         // Subtle organic breathing of particle points
@@ -461,10 +435,7 @@ export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
 
     return () => {
       cancelAnimationFrame(animId);
-      container.removeEventListener('pointerdown', handlePointerDown);
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-      container.removeEventListener('wheel', handleWheel);
+      controls.dispose();
       window.removeEventListener('resize', handleResize);
 
       if (container.contains(renderer.domElement)) {

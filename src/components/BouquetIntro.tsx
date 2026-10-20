@@ -324,15 +324,16 @@ export const BouquetIntro: React.FC<BouquetIntroProps> = ({ onStart, images, cut
             </svg>
           </button>
 
-          {/* Button overlay to reveal flowers on tap */}
+          {/* Button overlay to reveal flowers on tap (invisible touch target covering bouquet) */}
           {phase === 'flowers' && (
             <button
-              className="bouquet-reveal"
+              className="bouquet-reveal cursor-pointer"
               type="button"
               onClick={handleReveal}
-              aria-label=""
+              aria-label="Chạm vào bó hoa để mở"
+              style={{ color: 'transparent', fontSize: 0, overflow: 'hidden' }}
             >
-              Chạm vào bó hoa
+              <span className="sr-only">Chạm vào bó hoa</span>
             </button>
           )}
         </div>

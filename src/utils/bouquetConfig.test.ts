@@ -16,7 +16,7 @@ test('DEFAULT_GIFT_CONFIG has correct preset values for fc8e1763db7249b6', () =>
   assert.equal(DEFAULT_GIFT_CONFIG.productType, 'photobouquet');
   assert.equal(DEFAULT_GIFT_CONFIG.bouquetImages.length, 6);
   assert.equal(DEFAULT_GIFT_CONFIG.flyingImages.length, 18);
-  assert.equal(DEFAULT_GIFT_CONFIG.flyingTexts.length, 10);
+  assert.equal(DEFAULT_GIFT_CONFIG.flyingTexts.length, 14);
   assert.ok(DEFAULT_GIFT_CONFIG.letter.text.includes('20/10'));
   assert.equal(DEFAULT_GIFT_CONFIG.letter.envelope.headline, '20/10');
   assert.equal(DEFAULT_GIFT_CONFIG.bgMusic, '/music/bay-giua-ngan-ha.mp3');
