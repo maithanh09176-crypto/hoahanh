@@ -117,6 +117,7 @@
   color: #432b24 !important;
   white-space: pre-wrap !important;
   word-break: break-word !important;
+  text-indent: 0.5ch !important;
 }
 
 .fl-modal .letter-photo {

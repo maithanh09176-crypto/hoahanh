@@ -182,7 +182,9 @@ export const LetterModal: React.FC<LetterModalProps> = ({ open, onClose, letter 
 
                     <div className="letter-paragraphs space-y-2 text-gray-800 leading-snug text-[13.5px] md:text-[15px] font-normal">
                       {parsed.paragraphs.map((p, i) => (
-                        <p key={i}>{p}</p>
+                        <p key={i} style={{ textIndent: '0.5ch' }}>
+                          {p.trim()}
+                        </p>
                       ))}
                     </div>
 
@@ -223,9 +225,6 @@ export const LetterModal: React.FC<LetterModalProps> = ({ open, onClose, letter 
                         className="w-full h-full object-cover transition-transform duration-300"
                         style={{ transform: photoZoom ? 'scale(1.15)' : 'scale(1)' }}
                       />
-                    </span>
-                    <span className="photo-hint text-[10px] tracking-wider text-rose-700 bg-white/80 rounded-full px-2 py-0.5 mt-1 shadow-xs inline-block">
-                      {photoZoom ? 'Chạm để thu nhỏ' : 'Chạm để ngắm ảnh'}
                     </span>
                   </button>
                 )}

@@ -3,6 +3,7 @@ import { BouquetIntro } from './components/BouquetIntro';
 import { ThreeCanvasScene } from './components/ThreeCanvasScene';
 import { LetterModal } from './components/LetterModal';
 import { TopBar } from './components/TopBar';
+import { PhotoModal } from './components/PhotoModal';
 import {
   DEFAULT_GIFT_CONFIG,
   parseGiftConfig,
@@ -14,6 +15,7 @@ export default function App() {
   const [config, setConfig] = useState<GiftConfig>(() => getRandomizedGiftConfig(DEFAULT_GIFT_CONFIG));
   const [stage, setStage] = useState<'bouquet' | 'scene'>('bouquet');
   const [letterOpen, setLetterOpen] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -115,6 +117,7 @@ export default function App() {
             texts={config.flyingTexts}
             images={config.flyingImages}
             showHearts={config.flyingHearts}
+            onSelectPhoto={(url) => setSelectedPhoto(url)}
           />
 
           <TopBar
@@ -132,6 +135,12 @@ export default function App() {
         open={letterOpen}
         onClose={() => setLetterOpen(false)}
         letter={config.letter}
+      />
+
+      {/* 4. High-Resolution Photo Viewer (Tapping photo opens clean view with no notes) */}
+      <PhotoModal
+        imageUrl={selectedPhoto}
+        onClose={() => setSelectedPhoto(null)}
       />
     </main>
   );

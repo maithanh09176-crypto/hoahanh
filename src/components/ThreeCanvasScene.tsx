@@ -6,12 +6,14 @@ interface ThreeCanvasSceneProps {
   texts: string[];
   images: string[];
   showHearts?: boolean;
+  onSelectPhoto?: (imgUrl: string) => void;
 }
 
 export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
   texts,
   images,
-  showHearts = true
+  showHearts = true,
+  onSelectPhoto
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -260,6 +262,7 @@ export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
             side: THREE.DoubleSide
           });
           const photoMesh = new THREE.Mesh(planeGeo, planeMat);
+          photoMesh.userData = { imgUrl };
 
           // Add a soft glowing back/frame with subtle warm pink glow
           const frameGeo = new THREE.PlaneGeometry(6.2, 8.0);
@@ -269,6 +272,7 @@ export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
           });
           const frameMesh = new THREE.Mesh(frameGeo, frameMat);
           frameMesh.position.z = -0.02;
+          frameMesh.userData = { imgUrl };
           photoMesh.add(frameMesh);
 
           // Slightly randomize scale for natural depth
@@ -375,6 +379,79 @@ export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.45;
 
+    // --- 6. Raycast on Tap/Click to View Photo in High Resolution ---
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let downX = 0;
+    let downY = 0;
+    let downTime = 0;
+
+    const checkIntersection = (clientX: number, clientY: number) => {
+      if (!onSelectPhoto) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(pointer, camera);
+      const clickableTargets: THREE.Object3D[] = [];
+      photoMeshes.forEach((item) => {
+        clickableTargets.push(item.mesh);
+        item.mesh.children.forEach((c) => clickableTargets.push(c));
+      });
+
+      const intersects = raycaster.intersectObjects(clickableTargets, true);
+      if (intersects.length > 0) {
+        let obj: THREE.Object3D | null = intersects[0].object;
+        while (obj) {
+          if (obj.userData?.imgUrl) {
+            onSelectPhoto(obj.userData.imgUrl);
+            return;
+          }
+          obj = obj.parent;
+        }
+      }
+    };
+
+    const handlePointerDown = (e: PointerEvent) => {
+      downX = e.clientX;
+      downY = e.clientY;
+      downTime = Date.now();
+    };
+
+    const handlePointerUp = (e: PointerEvent) => {
+      const moveDist = Math.hypot(e.clientX - downX, e.clientY - downY);
+      const pressDuration = Date.now() - downTime;
+      if (moveDist < 12 && pressDuration < 450) {
+        checkIntersection(e.clientX, e.clientY);
+      }
+    };
+
+    const handleClick = (e: MouseEvent) => {
+      const moveDist = Math.hypot(e.clientX - downX, e.clientY - downY);
+      if (moveDist < 12) {
+        checkIntersection(e.clientX, e.clientY);
+      }
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const clickableTargets: THREE.Object3D[] = [];
+      photoMeshes.forEach((item) => {
+        clickableTargets.push(item.mesh);
+        item.mesh.children.forEach((c) => clickableTargets.push(c));
+      });
+      const intersects = raycaster.intersectObjects(clickableTargets, true);
+      renderer.domElement.style.cursor = intersects.length > 0 ? 'pointer' : 'grab';
+    };
+
+    renderer.domElement.addEventListener('pointerdown', handlePointerDown);
+    renderer.domElement.addEventListener('pointerup', handlePointerUp);
+    renderer.domElement.addEventListener('click', handleClick);
+    renderer.domElement.addEventListener('pointermove', handlePointerMove);
+
     // Handle Resize
     const handleResize = () => {
       if (!container) return;
@@ -435,6 +512,10 @@ export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
 
     return () => {
       cancelAnimationFrame(animId);
+      renderer.domElement.removeEventListener('pointerdown', handlePointerDown);
+      renderer.domElement.removeEventListener('pointerup', handlePointerUp);
+      renderer.domElement.removeEventListener('click', handleClick);
+      renderer.domElement.removeEventListener('pointermove', handlePointerMove);
       controls.dispose();
       window.removeEventListener('resize', handleResize);
 
@@ -450,7 +531,7 @@ export const ThreeCanvasScene: React.FC<ThreeCanvasSceneProps> = ({
       });
       dotTexture.dispose();
     };
-  }, [texts, images, showHearts]);
+  }, [texts, images, showHearts, onSelectPhoto]);
 
   return (
     <div

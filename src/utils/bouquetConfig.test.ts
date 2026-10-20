@@ -37,7 +37,7 @@ test('calculatePolygonClip produces valid polygon string', () => {
 
 test('formatLetterText correctly parses greeting, paragraphs, and signature', () => {
   const parsed = formatLetterText(DEFAULT_GIFT_CONFIG.letter.text);
-  assert.equal(parsed.greeting, 'Gửi cô gái bé nhỏ <3');
+  assert.equal(parsed.greeting, 'Gửi người xinh xắn nhất trên đời');
   assert.ok(parsed.paragraphs.length >= 1);
 });
 
