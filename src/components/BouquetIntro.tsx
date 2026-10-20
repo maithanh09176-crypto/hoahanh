@@ -30,7 +30,7 @@ export const BouquetIntro: React.FC<BouquetIntroProps> = ({ onStart, images, cut
   useEffect(() => {
     const timer = setTimeout(() => {
       setPhase('flowers');
-      setHintText('Chạm vào bó hoa của em này');
+      setHintText('');
       setStatusText('Chạm vào bó hoa đó');
     }, 400);
     return () => clearTimeout(timer);
