@@ -98,15 +98,19 @@ export const DEFAULT_GIFT_CONFIG: GiftConfig = {
   ],
   bouquetCutouts: [false, false, false, false, false, false],
   flyingTexts: [
-    "Chúc em luôn vui vẻ và hạnh phúc",
+    "Luôn vui vẻ và hạnh phúc",
     "Chúc em luôn xinh đẹp",
     "Thêm yêu đời",
-    "Chúc mừng ngày phụ nữ VN",
+    "Được chiều như công chứa",
     "20/10",
     "Thương em",
     "Chúc em thật nhiều may mắn",
     "Ngập tràn yêu thương",
-    "Mong mọi điều dịu dàng sẽ đến với em",
+    "Rực rỡ như hoa",
+    "Yêu đời, yêu mình",
+    "Chẳng lo, chẳng nghĩ",
+    "Xinh gái và giàu có",
+    "Niền vui mỗi ngày",
     "Ngày càng xinh xắn"
   ],
   flyingImages: [
