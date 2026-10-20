@@ -330,7 +330,7 @@ export const BouquetIntro: React.FC<BouquetIntroProps> = ({ onStart, images, cut
               className="bouquet-reveal"
               type="button"
               onClick={handleReveal}
-              aria-label="Chạm vào bó hoa"
+              aria-label=""
             >
               Chạm vào bó hoa
             </button>
